@@ -1,0 +1,29 @@
+{
+  "name": "@spectree/cli",
+  "version": "1.0.0",
+  "description": "CLI for SpecTree Markdown transclusion",
+  "type": "module",
+  "main": "./src/index.js",
+  "bin": {
+    "spectree": "./bin/spectree.js"
+  },
+  "scripts": {
+    "test": "vitest",
+    "test:run": "vitest run"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": ["cli", "markdown", "transclusion"],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@spectree/core": "workspace:*",
+    "jackspeak": "^2.3.6"
+  },
+  "devDependencies": {
+    "vitest": "^1.0.0",
+    "ink": "^4.4.1",
+    "ink-ui": "^0.4.0"
+  }
+}

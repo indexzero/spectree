@@ -1,0 +1,26 @@
+{
+  "name": "@spectree/core",
+  "version": "1.0.0",
+  "description": "Core functionality for SpecTree Markdown transclusion",
+  "type": "module",
+  "main": "./src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./parser": "./src/parser.js",
+    "./resolver": "./src/resolver.js",
+    "./errors": "./src/errors.js"
+  },
+  "scripts": {
+    "test": "vitest",
+    "test:run": "vitest run"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": ["markdown", "transclusion", "preprocessor"],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "vitest": "^1.0.0"
+  }
+}

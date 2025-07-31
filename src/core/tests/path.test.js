@@ -1,0 +1,68 @@
+import { describe, it, expect } from 'vitest';
+import { resolve, dirname } from 'node:path';
+import { 
+  resolveReferencePath, 
+  isPathWithinRoot, 
+  normalizePath 
+} from '../src/path.js';
+
+describe('resolveReferencePath', () => {
+  it('should resolve relative path from current file', () => {
+    const currentFile = '/project/docs/index.md';
+    const reference = 'sub/page.md';
+    const resolved = resolveReferencePath(currentFile, reference);
+    expect(resolved).toBe(resolve('/project/docs/sub/page.md'));
+  });
+  
+  it('should resolve parent directory reference', () => {
+    const currentFile = '/project/docs/sub/page.md';
+    const reference = '../index.md';
+    const resolved = resolveReferencePath(currentFile, reference);
+    expect(resolved).toBe(resolve('/project/docs/index.md'));
+  });
+  
+  it('should resolve same directory reference', () => {
+    const currentFile = '/project/docs/index.md';
+    const reference = './sibling.md';
+    const resolved = resolveReferencePath(currentFile, reference);
+    expect(resolved).toBe(resolve('/project/docs/sibling.md'));
+  });
+});
+
+describe('isPathWithinRoot', () => {
+  it('should return true for path within root', () => {
+    const root = '/project';
+    const path = '/project/docs/file.md';
+    expect(isPathWithinRoot(root, path)).toBe(true);
+  });
+  
+  it('should return false for path outside root', () => {
+    const root = '/project';
+    const path = '/other/file.md';
+    expect(isPathWithinRoot(root, path)).toBe(false);
+  });
+  
+  it('should return false for path escaping with ..', () => {
+    const root = '/project/docs';
+    const path = '/project/docs/../../../etc/passwd';
+    expect(isPathWithinRoot(root, path)).toBe(false);
+  });
+  
+  it('should handle relative paths correctly', () => {
+    const root = process.cwd();
+    const path = resolve(root, 'subdir/file.md');
+    expect(isPathWithinRoot(root, path)).toBe(true);
+  });
+});
+
+describe('normalizePath', () => {
+  it('should normalize path separators', () => {
+    const path = 'path\\to\\file.md';
+    expect(normalizePath(path)).toBe('path/to/file.md');
+  });
+  
+  it('should handle already normalized paths', () => {
+    const path = 'path/to/file.md';
+    expect(normalizePath(path)).toBe('path/to/file.md');
+  });
+});
