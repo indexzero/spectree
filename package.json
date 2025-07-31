@@ -1,0 +1,21 @@
+{
+  "name": "spectree-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "SpecTree - A simple format for composable Markdown trees",
+  "type": "module",
+  "scripts": {
+    "test": "pnpm -r test",
+    "test:run": "pnpm -r test:run",
+    "lint": "eslint src/*/src/**/*.js",
+    "format": "prettier --write src/*/src/**/*.js"
+  },
+  "keywords": ["markdown", "transclusion", "cli"],
+  "author": "",
+  "license": "MIT",
+  "packageManager": "pnpm@10.12.1",
+  "devDependencies": {
+    "eslint": "^8.50.0",
+    "prettier": "^3.0.0"
+  }
+}
