@@ -1,7 +1,7 @@
-import { jack } from 'jackspeak';
 import { readFileSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { jack } from 'jackspeak';
 import { resolveCommand } from './commands/resolve.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -13,24 +13,24 @@ const packageJson = JSON.parse(readFileSync(packagePath, 'utf8'));
  */
 export function createCLI() {
   const j = jack({
-    envPrefix: 'SPECTREE',
+    envPrefix: 'SPECTREE'
   })
     .opt({
       output: {
         short: 'o',
         description: 'Output file (default: stdout)',
-        hint: 'FILE',
-      },
+        hint: 'FILE'
+      }
     })
     .flag({
       version: {
         short: 'v',
-        description: 'Show version',
+        description: 'Show version'
       },
       help: {
         short: 'h',
-        description: 'Show help',
-      },
+        description: 'Show help'
+      }
     })
     .description(`${packageJson.description}
     
@@ -50,19 +50,19 @@ Examples:
 export async function run(argv = process.argv) {
   const j = createCLI();
   const { values, positionals } = j.parse(argv.slice(2));
-  
+
   // Handle help flag
   if (values.help) {
     console.log(j.usage());
     return;
   }
-  
+
   // Handle version flag
   if (values.version) {
     console.log(packageJson.version);
     return;
   }
-  
+
   // Check for input file
   const inputFile = positionals[0];
   if (!inputFile) {
@@ -70,7 +70,7 @@ export async function run(argv = process.argv) {
     console.error('Try "spectree --help" for more information');
     process.exit(1);
   }
-  
+
   // Run resolve command
   await resolveCommand(values, inputFile);
 }

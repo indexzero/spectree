@@ -11,11 +11,11 @@ const REFERENCE_PATTERN = /^@([^@].+\.md)$/;
  */
 export function parseLine(line) {
   const match = line.match(REFERENCE_PATTERN);
-  
+
   if (!match) {
     return { isReference: false };
   }
-  
+
   return {
     isReference: true,
     path: match[1]
@@ -30,9 +30,9 @@ export function parseLine(line) {
 export function parseReferences(content) {
   const lines = content.split('\n');
   const references = [];
-  
-  for (let i = 0; i < lines.length; i++) {
-    const result = parseLine(lines[i]);
+
+  for (const [i, line] of lines.entries()) {
+    const result = parseLine(line);
     if (result.isReference) {
       references.push({
         line: i + 1,
@@ -40,7 +40,7 @@ export function parseReferences(content) {
       });
     }
   }
-  
+
   return references;
 }
 

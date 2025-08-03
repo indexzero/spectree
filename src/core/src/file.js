@@ -11,23 +11,26 @@ import { FileNotFoundError, PermissionError } from './errors.js';
 export async function readFileContent(filePath) {
   try {
     await access(filePath, constants.R_OK);
-  } catch (error) {
-    if (error.code === 'ENOENT') {
+  } catch (err) {
+    if (err.code === 'ENOENT') {
       throw new FileNotFoundError(filePath);
     }
-    if (error.code === 'EACCES') {
+
+    if (err.code === 'EACCES') {
       throw new PermissionError(filePath);
     }
-    throw error;
+
+    throw err;
   }
-  
+
   try {
     return await readFile(filePath, 'utf8');
-  } catch (error) {
-    if (error.code === 'EACCES') {
+  } catch (err) {
+    if (err.code === 'EACCES') {
       throw new PermissionError(filePath);
     }
-    throw error;
+
+    throw err;
   }
 }
 

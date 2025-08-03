@@ -1,4 +1,6 @@
-import { dirname, join, resolve, relative, isAbsolute, normalize } from 'node:path';
+import {
+  dirname, join, resolve, relative, isAbsolute, normalize
+} from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 /**
@@ -22,7 +24,7 @@ export function isPathWithinRoot(rootDir, targetPath) {
   const normalizedRoot = resolve(rootDir);
   const normalizedTarget = resolve(targetPath);
   const relativePath = relative(normalizedRoot, normalizedTarget);
-  
+
   // If relative path starts with .., it's outside the root
   return !relativePath.startsWith('..') && !isAbsolute(relativePath);
 }
@@ -33,7 +35,7 @@ export function isPathWithinRoot(rootDir, targetPath) {
  * @returns {string} Normalized path
  */
 export function normalizePath(filePath) {
-  return normalize(filePath).replace(/\\/g, '/');
+  return normalize(filePath).replaceAll('\\', '/');
 }
 
 /**

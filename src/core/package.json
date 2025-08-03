@@ -11,16 +11,17 @@
     "./errors": "./src/errors.js"
   },
   "scripts": {
-    "test": "vitest",
-    "test:run": "vitest run"
+    "test": "node --test tests/*.test.js",
+    "test:run": "node --test tests/*.test.js"
   },
   "engines": {
     "node": ">=18"
   },
   "keywords": ["markdown", "transclusion", "preprocessor"],
-  "author": "",
+  "author": "Charlie Robbins <npm@charlie.dev>",
   "license": "MIT",
-  "devDependencies": {
-    "vitest": "^1.0.0"
-  }
+  "files": [
+    "src",
+    "../../LICENSE"
+  ]
 }
