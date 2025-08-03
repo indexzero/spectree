@@ -7,15 +7,22 @@
   "scripts": {
     "test": "pnpm -r test",
     "test:run": "pnpm -r test:run",
-    "lint": "eslint src/*/src/**/*.js",
-    "format": "prettier --write src/*/src/**/*.js"
+    "lint": "xo",
+    "lint:fix": "xo --fix",
+    "changeset": "changeset",
+    "version-packages": "changeset version",
+    "release": "changeset publish"
   },
-  "keywords": ["markdown", "transclusion", "cli"],
-  "author": "",
+  "keywords": [
+    "markdown",
+    "transclusion",
+    "cli"
+  ],
+  "author": "Charlie Robbins <npm@charlie.dev>",
   "license": "MIT",
   "packageManager": "pnpm@10.12.1",
   "devDependencies": {
-    "eslint": "^8.50.0",
-    "prettier": "^3.0.0"
+    "@changesets/cli": "^2.29.5",
+    "xo": "^1.2.1"
   }
 }

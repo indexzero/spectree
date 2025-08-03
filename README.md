@@ -4,25 +4,28 @@ A JavaScript implementation of SpecTree - a simple format for composable Markdow
 
 ## Installation
 
-```bash
-# Install dependencies
-pnpm install
+```sh
+# Install globally
+npm install -g @spectree/cli
 
-# Run tests
-pnpm test
+# Or with pnpm
+pnpm add -g @spectree/cli
+
+# Or run directly with npx
+npx @spectree/cli <file>
 ```
 
 ## Usage
 
-```bash
+```sh
 # Resolve @ references in a Markdown file
-node src/cli/bin/spectree.js input.md
+spectree input.md
 
 # Output to a file
-node src/cli/bin/spectree.js input.md -o output.md
+spectree input.md -o output.md
 
 # Show help
-node src/cli/bin/spectree.js --help
+spectree --help
 ```
 
 ## Example
@@ -45,7 +48,7 @@ Given these files:
 - Primary: #007bff
 ```
 
-Running `node src/cli/bin/spectree.js main.md` outputs:
+Running `spectree main.md` outputs:
 
 ```markdown
 # My App
@@ -56,19 +59,15 @@ Running `node src/cli/bin/spectree.js main.md` outputs:
 - Primary: #007bff
 ```
 
-## Project Structure
+# Inspiration
 
-This is a pnpm monorepo with two packages:
+This was heavily inspired by [fuzzycomputer/spectree](https://github.com/fuzzycomputer/spectree) and his [writing about it](https://www.fuzzycomputer.com/posts/spectree).
+The original `README.md` and `README.spec.md` are included in `dev/ref` for reference purposes *(with attribution)*.
 
-- `src/core` - Core transclusion logic
-- `src/cli` - Command-line interface
+## Contributing
 
-## Development
+Please see our [Contributing Guide](CONTRIBUTING.md) for details on how to contribute to this project.
 
-```bash
-# Run tests for all packages
-pnpm test
+## Code of Conduct
 
-# Run tests for core package
-cd src/core && pnpm test
-```
+This project adheres to the [Contributor Covenant Code of Conduct](CODE_OF_CONDUCT.md). By participating, you are expected to uphold this code.
