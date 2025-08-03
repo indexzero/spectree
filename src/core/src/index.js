@@ -4,12 +4,12 @@
 
 export { parseLine, parseReferences, isValidReference } from './parser.js';
 export { Resolver, resolveFile } from './resolver.js';
-export { 
-  resolveReferencePath, 
-  isPathWithinRoot, 
+export {
+  resolveReferencePath,
+  isPathWithinRoot,
   normalizePath,
   getDirname,
-  joinPath 
+  joinPath
 } from './path.js';
 export { readFileContent, fileExists } from './file.js';
 export {

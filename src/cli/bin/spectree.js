@@ -3,7 +3,7 @@
 import { run } from '../src/index.js';
 
 // Run the CLI
-run().catch(error => {
-  console.error('Unexpected error:', error);
+run().catch(err => {
+  console.error('Unexpected error:', err);
   process.exit(1);
 });

@@ -12,7 +12,7 @@ export class Resolver {
     this.rootDir = options.rootDir || null;
     this.processingStack = new Set();
   }
-  
+
   /**
    * Resolve a single file and all its references
    * @param {string} filePath - Path to the file to resolve
@@ -20,35 +20,33 @@ export class Resolver {
    */
   async resolveFile(filePath) {
     const absolutePath = resolve(filePath);
-    
+
     // Set root directory from the first file if not already set
-    if (!this.rootDir) {
-      this.rootDir = dirname(absolutePath);
-    }
-    
+    this.rootDir ||= dirname(absolutePath);
+
     // Check for circular reference
     if (this.processingStack.has(absolutePath)) {
-      throw new CircularReferenceError(absolutePath, Array.from(this.processingStack));
+      throw new CircularReferenceError(absolutePath, [...this.processingStack]);
     }
-    
+
     // Add to processing stack
     this.processingStack.add(absolutePath);
-    
+
     try {
       const content = await readFileContent(absolutePath);
       const resolvedContent = await this.resolveContent(content, absolutePath);
-      
+
       // Remove from processing stack
       this.processingStack.delete(absolutePath);
-      
+
       return resolvedContent;
-    } catch (error) {
+    } catch (err) {
       // Clean up processing stack on error
       this.processingStack.delete(absolutePath);
-      throw error;
+      throw err;
     }
   }
-  
+
   /**
    * Resolve @ references in content
    * @param {string} content - Content to process
@@ -58,27 +56,26 @@ export class Resolver {
   async resolveContent(content, currentFilePath) {
     const lines = content.split('\n');
     const resolvedLines = [];
-    
-    for (let i = 0; i < lines.length; i++) {
-      const line = lines[i];
+
+    for (const line of lines) {
       const parseResult = parseLine(line);
-      
+
       if (parseResult.isReference) {
         // Resolve the reference
         const referencedPath = resolveReferencePath(currentFilePath, parseResult.path);
-        
+
         // Check if path escapes root directory
         if (!isPathWithinRoot(this.rootDir, referencedPath)) {
           throw new PathEscapeError(parseResult.path, this.rootDir);
         }
-        
+
         // Recursively resolve the referenced file
         const resolvedContent = await this.resolveFile(referencedPath);
-        
+
         // Replace the reference line with the resolved content
         // Remove trailing newline if it exists to avoid double newlines
-        const contentToAdd = resolvedContent.endsWith('\n') 
-          ? resolvedContent.slice(0, -1) 
+        const contentToAdd = resolvedContent.endsWith('\n')
+          ? resolvedContent.slice(0, -1)
           : resolvedContent;
         resolvedLines.push(contentToAdd);
       } else {
@@ -86,7 +83,7 @@ export class Resolver {
         resolvedLines.push(line);
       }
     }
-    
+
     return resolvedLines.join('\n');
   }
 }

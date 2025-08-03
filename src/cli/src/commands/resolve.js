@@ -12,7 +12,7 @@ export async function resolveCommand(opts, inputFile) {
     // Resolve the input file
     const absolutePath = resolvePath(inputFile);
     const resolvedContent = await resolveSpec(absolutePath);
-    
+
     // Output the result
     if (opts.output) {
       // Write to file
@@ -22,8 +22,8 @@ export async function resolveCommand(opts, inputFile) {
       // Write to stdout
       process.stdout.write(resolvedContent);
     }
-  } catch (error) {
-    console.error(`Error: ${error.message}`);
+  } catch (err) {
+    console.error(`Error: ${err.message}`);
     process.exit(1);
   }
 }
