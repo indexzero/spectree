@@ -2,7 +2,7 @@ import { dirname, resolve } from 'node:path';
 import { parseLine } from './parser.js';
 import { resolveReferencePath, isPathWithinRoot } from './path.js';
 import { readFileContent } from './file.js';
-import { CircularReferenceError, PathEscapeError, InvalidReferenceError } from './errors.js';
+import { CircularReferenceError, PathEscapeError } from './errors.js';
 
 /**
  * Resolve all @ references in a file recursively
@@ -57,31 +57,39 @@ export class Resolver {
     const lines = content.split('\n');
     const resolvedLines = [];
 
-    for (const line of lines) {
-      const parseResult = parseLine(line);
+    // Process all lines and collect promises for references
+    const unordered = await Promise.all(
+      lines.map(async (line, index) => {
+        const parseResult = parseLine(line);
 
-      if (parseResult.isReference) {
-        // Resolve the reference
-        const referencedPath = resolveReferencePath(currentFilePath, parseResult.path);
+        if (parseResult.isReference) {
+          // Resolve the reference
+          const referencedPath = resolveReferencePath(currentFilePath, parseResult.path);
 
-        // Check if path escapes root directory
-        if (!isPathWithinRoot(this.rootDir, referencedPath)) {
-          throw new PathEscapeError(parseResult.path, this.rootDir);
+          // Check if path escapes root directory
+          if (!isPathWithinRoot(this.rootDir, referencedPath)) {
+            throw new PathEscapeError(parseResult.path, this.rootDir);
+          }
+
+          // Recursively resolve the referenced file
+          const resolvedContent = await this.resolveFile(referencedPath);
+
+          // Replace the reference line with the resolved content
+          // Remove trailing newline if it exists to avoid double newlines
+          const contentToAdd = resolvedContent.endsWith('\n')
+            ? resolvedContent.slice(0, -1)
+            : resolvedContent;
+          return { index, content: contentToAdd };
         }
 
-        // Recursively resolve the referenced file
-        const resolvedContent = await this.resolveFile(referencedPath);
-
-        // Replace the reference line with the resolved content
-        // Remove trailing newline if it exists to avoid double newlines
-        const contentToAdd = resolvedContent.endsWith('\n')
-          ? resolvedContent.slice(0, -1)
-          : resolvedContent;
-        resolvedLines.push(contentToAdd);
-      } else {
         // Keep the line as-is
-        resolvedLines.push(line);
-      }
+        return { index, content: line };
+      })
+    );
+
+    const results = unordered.sort((a, b) => a.index - b.index);
+    for (const result of results) {
+      resolvedLines.push(result.content);
     }
 
     return resolvedLines.join('\n');

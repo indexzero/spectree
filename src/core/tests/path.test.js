@@ -1,6 +1,7 @@
 import { describe, it } from 'node:test';
 import { strict as assert } from 'node:assert';
-import { resolve, dirname } from 'node:path';
+import { resolve } from 'node:path';
+import process from 'node:process';
 import {
   resolveReferencePath,
   isPathWithinRoot,

@@ -7,6 +7,7 @@ export default {
     'import/extensions': 'off',
     '@stylistic/comma-dangle': ['error', 'never'],
     '@stylistic/object-curly-spacing': 'off',
+    '@stylistic/function-paren-newline': 'off',
     'unicorn/no-process-exit': 'off',
     'unicorn/import-style': 'off',
     'no-return-await': 'off',

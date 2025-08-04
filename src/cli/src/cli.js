@@ -1,20 +1,29 @@
 import { readFileSync } from 'node:fs';
-import { join, dirname } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { join } from 'node:path';
+import process from 'node:process';
 import { jack } from 'jackspeak';
 import { resolveCommand } from './commands/resolve.js';
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
-const packagePath = join(__dirname, '../package.json');
+const packagePath = join(import.meta.dirname, '../package.json');
 const packageJson = JSON.parse(readFileSync(packagePath, 'utf8'));
 
 /**
  * Create and configure the CLI
  */
 export function createCLI() {
-  const j = jack({
-    envPrefix: 'SPECTREE'
-  })
+  const ack = jack({
+    envPrefix: 'spectree',
+    allowPositionals: true
+  }).description(`${packageJson.description}
+
+Usage:
+  spectree <file>     Resolve @ references in a Markdown file
+
+Examples:
+  spectree input.md              # Output to stdout
+  spectree input.md -o output.md # Output to file`);
+
+  const j = ack
     .opt({
       output: {
         short: 'o',
@@ -26,22 +35,35 @@ export function createCLI() {
       version: {
         short: 'v',
         description: 'Show version'
-      },
-      help: {
-        short: 'h',
-        description: 'Show help'
       }
     })
-    .description(`${packageJson.description}
-    
-Usage:
-  spectree <file>     Resolve @ references in a Markdown file
-  
-Examples:
-  spectree input.md              # Output to stdout
-  spectree input.md -o output.md # Output to file`);
+    .flag({
+      help: {
+        short: 'h',
+        description: 'Show help',
+        default: false
+      }
+    });
 
   return j;
+}
+
+/**
+ * Parse the arguments and set configuration and positionals accordingly.
+ */
+function parse(j, argh) {
+  j.loadEnvDefaults();
+  const raw = j.parseRaw(argh);
+
+  j.applyDefaults(raw);
+  j.writeEnv(raw);
+
+  return {
+    command: resolveCommand,
+    usage: () => j.usage(),
+    values: raw.values,
+    positionals: raw.positionals
+  };
 }
 
 /**
@@ -49,7 +71,7 @@ Examples:
  */
 export async function run(argv = process.argv) {
   const j = createCLI();
-  const { values, positionals } = j.parse(argv.slice(2));
+  const { command, values, positionals } = parse(j, argv);
 
   // Handle help flag
   if (values.help) {
@@ -72,5 +94,5 @@ export async function run(argv = process.argv) {
   }
 
   // Run resolve command
-  await resolveCommand(values, inputFile);
+  await command(values, inputFile);
 }

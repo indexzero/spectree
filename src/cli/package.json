@@ -1,6 +1,6 @@
 {
   "name": "@spectree/cli",
-  "version": "1.0.0",
+  "version": "0.0.0",
   "description": "CLI for SpecTree Markdown transclusion",
   "type": "module",
   "main": "./src/index.js",
@@ -8,23 +8,28 @@
     "spectree": "./bin/spectree.js"
   },
   "scripts": {
-    "test": "node --test",
-    "test:run": "node --test"
+    "test": "node --test tests/*.test.js"
   },
   "engines": {
     "node": ">=18"
   },
-  "keywords": ["cli", "markdown", "transclusion"],
+  "keywords": [
+    "cli",
+    "markdown",
+    "transclusion"
+  ],
   "author": "Charlie Robbins <npm@charlie.dev>",
   "license": "MIT",
   "files": [
     "src",
     "bin",
-    "../../LICENSE"
+    "LICENSE"
   ],
   "dependencies": {
     "@spectree/core": "workspace:*",
-    "jackspeak": "^2.3.6"
+    "jackspeak": "^4.1.0"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "tinyexec": "^1.0.1"
+  }
 }
