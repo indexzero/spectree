@@ -58,7 +58,7 @@ export class Resolver {
     const resolvedLines = [];
 
     // Process all lines and collect promises for references
-    const results = (await Promise.all(
+    const unordered = await Promise.all(
       lines.map(async (line, index) => {
         const parseResult = parseLine(line);
 
@@ -85,8 +85,9 @@ export class Resolver {
         // Keep the line as-is
         return { index, content: line };
       })
-    )).sort((a, b) => a.index - b.index);
+    );
 
+    const results = unordered.sort((a, b) => a.index - b.index);
     for (const result of results) {
       resolvedLines.push(result.content);
     }

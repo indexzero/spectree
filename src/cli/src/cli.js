@@ -3,7 +3,6 @@ import { join } from 'node:path';
 import process from 'node:process';
 import { jack } from 'jackspeak';
 import { resolveCommand } from './commands/resolve.js';
-import { resolve } from 'node:dns';
 
 const packagePath = join(import.meta.dirname, '../package.json');
 const packageJson = JSON.parse(readFileSync(packagePath, 'utf8'));
@@ -16,10 +15,10 @@ export function createCLI() {
     envPrefix: 'spectree',
     allowPositionals: true
   }).description(`${packageJson.description}
-    
+
 Usage:
   spectree <file>     Resolve @ references in a Markdown file
-  
+
 Examples:
   spectree input.md              # Output to stdout
   spectree input.md -o output.md # Output to file`);
@@ -44,8 +43,8 @@ Examples:
         description: 'Show help',
         default: false
       }
-    })
-    
+    });
+
   return j;
 }
 
@@ -53,20 +52,19 @@ Examples:
  * Parse the arguments and set configuration and positionals accordingly.
  */
 function parse(j, argh) {
-  j.loadEnvDefaults()
-  const raw = j.parseRaw(argh)
+  j.loadEnvDefaults();
+  const raw = j.parseRaw(argh);
 
-  j.applyDefaults(raw)
-  j.writeEnv(raw)
+  j.applyDefaults(raw);
+  j.writeEnv(raw);
 
   return {
     command: resolveCommand,
     usage: () => j.usage(),
     values: raw.values,
-    positionals: raw.positionals,
-  }
+    positionals: raw.positionals
+  };
 }
-
 
 /**
  * Run the CLI
