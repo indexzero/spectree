@@ -1,6 +1,6 @@
 {
   "name": "@spectree/core",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Core functionality for SpecTree Markdown transclusion",
   "type": "module",
   "main": "./src/index.js",
@@ -16,7 +16,11 @@
   "engines": {
     "node": ">=18"
   },
-  "keywords": ["markdown", "transclusion", "preprocessor"],
+  "keywords": [
+    "markdown",
+    "transclusion",
+    "preprocessor"
+  ],
   "author": "Charlie Robbins <npm@charlie.dev>",
   "license": "MIT",
   "files": [
