@@ -13,7 +13,11 @@
   "engines": {
     "node": ">=18"
   },
-  "keywords": ["cli", "markdown", "transclusion"],
+  "keywords": [
+    "cli",
+    "markdown",
+    "transclusion"
+  ],
   "author": "Charlie Robbins <npm@charlie.dev>",
   "license": "MIT",
   "files": [
@@ -24,5 +28,8 @@
   "dependencies": {
     "@spectree/core": "workspace:*",
     "jackspeak": "^4.1.0"
+  },
+  "devDependencies": {
+    "tinyexec": "^1.0.1"
   }
 }
