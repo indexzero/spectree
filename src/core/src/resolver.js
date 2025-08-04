@@ -2,7 +2,7 @@ import { dirname, resolve } from 'node:path';
 import { parseLine } from './parser.js';
 import { resolveReferencePath, isPathWithinRoot } from './path.js';
 import { readFileContent } from './file.js';
-import { CircularReferenceError, PathEscapeError, InvalidReferenceError } from './errors.js';
+import { CircularReferenceError, PathEscapeError } from './errors.js';
 
 /**
  * Resolve all @ references in a file recursively
@@ -57,7 +57,8 @@ export class Resolver {
     const lines = content.split('\n');
     const resolvedLines = [];
 
-    for (const line of lines) {
+    // Process all lines and collect promises for references
+    const linePromises = lines.map(async (line, index) => {
       const parseResult = parseLine(line);
 
       if (parseResult.isReference) {
@@ -77,11 +78,20 @@ export class Resolver {
         const contentToAdd = resolvedContent.endsWith('\n')
           ? resolvedContent.slice(0, -1)
           : resolvedContent;
-        resolvedLines.push(contentToAdd);
-      } else {
-        // Keep the line as-is
-        resolvedLines.push(line);
+        return { index, content: contentToAdd };
       }
+
+      // Keep the line as-is
+      return { index, content: line };
+    });
+
+    // Wait for all promises to resolve
+    const results = await Promise.all(linePromises);
+
+    // Sort by index to maintain order and extract content
+    results.sort((a, b) => a.index - b.index);
+    for (const result of results) {
+      resolvedLines.push(result.content);
     }
 
     return resolvedLines.join('\n');

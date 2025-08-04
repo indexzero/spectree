@@ -1,5 +1,6 @@
 import { resolve as resolvePath } from 'node:path';
 import { writeFile } from 'node:fs/promises';
+import process from 'node:process';
 import { resolveFile as resolveSpec } from '@spectree/core';
 
 /**
