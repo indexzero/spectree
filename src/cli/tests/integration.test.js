@@ -75,6 +75,22 @@ describe('CLI Integration Tests', () => {
     assert(stdout.includes('0.0.0'));
   });
 
+  it('should show help with -h short flag', async () => {
+    const { code, stdout } = await runCLI(['-h']);
+    
+    assert.equal(code, 0);
+    assert(stdout.includes('CLI for SpecTree Markdown transclusion'));
+    assert(stdout.includes('Usage:'));
+    assert(stdout.includes('spectree <file>'));
+  });
+
+  it('should show version with -v short flag', async () => {
+    const { code, stdout } = await runCLI(['-v']);
+    
+    assert.equal(code, 0);
+    assert(stdout.includes('0.0.0'));
+  });
+
   it('should resolve a simple file', async () => {
     const inputFile = join(fixturesDir, 'simple.md');
     const { code, stdout } = await runCLI([inputFile]);
@@ -115,7 +131,7 @@ describe('CLI Integration Tests', () => {
     assert(stderr.includes('File not found'));
   });
 
-  it.skip('should respect SPECTREE_ environment variables', async () => {
+  it('should respect SPECTREE_ environment variables', async () => {
     // Skipping: Environment variable handling needs to be implemented after jackspeak parsing
     const inputFile = join(fixturesDir, 'simple.md');
     const { code, stderr } = await runCLI([inputFile], {

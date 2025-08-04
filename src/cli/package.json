@@ -23,6 +23,6 @@
   ],
   "dependencies": {
     "@spectree/core": "workspace:*",
-    "jackspeak": "^2.3.6"
+    "jackspeak": "^4.1.0"
   }
 }
