@@ -58,38 +58,35 @@ export class Resolver {
     const resolvedLines = [];
 
     // Process all lines and collect promises for references
-    const linePromises = lines.map(async (line, index) => {
-      const parseResult = parseLine(line);
+    const results = await Promise.all(
+      lines.map(async (line, index) => {
+        const parseResult = parseLine(line);
 
-      if (parseResult.isReference) {
-        // Resolve the reference
-        const referencedPath = resolveReferencePath(currentFilePath, parseResult.path);
+        if (parseResult.isReference) {
+          // Resolve the reference
+          const referencedPath = resolveReferencePath(currentFilePath, parseResult.path);
 
-        // Check if path escapes root directory
-        if (!isPathWithinRoot(this.rootDir, referencedPath)) {
-          throw new PathEscapeError(parseResult.path, this.rootDir);
+          // Check if path escapes root directory
+          if (!isPathWithinRoot(this.rootDir, referencedPath)) {
+            throw new PathEscapeError(parseResult.path, this.rootDir);
+          }
+
+          // Recursively resolve the referenced file
+          const resolvedContent = await this.resolveFile(referencedPath);
+
+          // Replace the reference line with the resolved content
+          // Remove trailing newline if it exists to avoid double newlines
+          const contentToAdd = resolvedContent.endsWith('\n')
+            ? resolvedContent.slice(0, -1)
+            : resolvedContent;
+          return { index, content: contentToAdd };
         }
 
-        // Recursively resolve the referenced file
-        const resolvedContent = await this.resolveFile(referencedPath);
+        // Keep the line as-is
+        return { index, content: line };
+      })
+    ).sort((a, b) => a.index - b.index);
 
-        // Replace the reference line with the resolved content
-        // Remove trailing newline if it exists to avoid double newlines
-        const contentToAdd = resolvedContent.endsWith('\n')
-          ? resolvedContent.slice(0, -1)
-          : resolvedContent;
-        return { index, content: contentToAdd };
-      }
-
-      // Keep the line as-is
-      return { index, content: line };
-    });
-
-    // Wait for all promises to resolve
-    const results = await Promise.all(linePromises);
-
-    // Sort by index to maintain order and extract content
-    results.sort((a, b) => a.index - b.index);
     for (const result of results) {
       resolvedLines.push(result.content);
     }
