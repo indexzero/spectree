@@ -1,6 +1,6 @@
 {
   "name": "@spectree/cli",
-  "version": "1.0.0",
+  "version": "0.0.0",
   "description": "CLI for SpecTree Markdown transclusion",
   "type": "module",
   "main": "./src/index.js",
@@ -8,8 +8,7 @@
     "spectree": "./bin/spectree.js"
   },
   "scripts": {
-    "test": "node --test",
-    "test:run": "node --test"
+    "test": "node --test tests/*.test.js"
   },
   "engines": {
     "node": ">=18"
@@ -20,11 +19,10 @@
   "files": [
     "src",
     "bin",
-    "../../LICENSE"
+    "LICENSE"
   ],
   "dependencies": {
     "@spectree/core": "workspace:*",
     "jackspeak": "^2.3.6"
-  },
-  "devDependencies": {}
+  }
 }

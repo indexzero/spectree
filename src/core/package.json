@@ -1,6 +1,6 @@
 {
   "name": "@spectree/core",
-  "version": "1.0.0",
+  "version": "0.0.0",
   "description": "Core functionality for SpecTree Markdown transclusion",
   "type": "module",
   "main": "./src/index.js",
@@ -11,8 +11,7 @@
     "./errors": "./src/errors.js"
   },
   "scripts": {
-    "test": "node --test tests/*.test.js",
-    "test:run": "node --test tests/*.test.js"
+    "test": "node --test tests/*.test.js"
   },
   "engines": {
     "node": ">=18"
@@ -22,6 +21,6 @@
   "license": "MIT",
   "files": [
     "src",
-    "../../LICENSE"
+    "LICENSE"
   ]
 }
